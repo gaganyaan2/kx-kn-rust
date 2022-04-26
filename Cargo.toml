@@ -1,0 +1,11 @@
+
+[package]
+name = "kx-kn"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+home = "0.5.3"
+yaml-rust = "0.4.5"
