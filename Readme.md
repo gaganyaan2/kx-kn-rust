@@ -1,4 +1,4 @@
-# kx-kn in rust
+# kx-kn in rust (WIP)
 Simple kubernetes context and namespace switch using rust
 
 ### Install kn and kx:
