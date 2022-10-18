@@ -1,5 +1,6 @@
 mod kubeconfig;
 
 fn main(){
-  kubeconfig::run();
+  kubeconfig::kubeconfig_from_env();
+  kubeconfig::kubeconfig_from_home_dir();
 }

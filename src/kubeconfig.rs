@@ -1,23 +1,26 @@
 extern crate yaml_rust;
 use std::fs;
+use std::env;
+use serde::{Serialize, Deserialize};
 
-pub fn run(){
-    // home::home_dir();
-    // println!("{}", path.display());
-    let mut string = String::new();
-    let message = match home::home_dir() {
-        Some(path) => println!("{}", path.display()),
-        None => println!("Impossible to get your home dir!"),
-    };
-    println!("{:?}", message);
 
-    // let path_e = "/home/home/.kube/config";
-    // println!("{}", path_e);
+pub fn kubeconfig_from_env(){
+    let kubeconfig_env = env::var("KUBECONFIG").expect("$KUBECONFIG is not set");
+    println!("KUBECONFIG={}",kubeconfig_env);
+}
 
-    // let contents = fs::read_to_string(path_e)
-    //     .expect("Something went wrong reading the file");
+pub fn kubeconfig_from_home_dir(){
 
-    //println!("With text:\n{}", contents);
+    let home = env::var("HOME").expect("$HOME is not set");
+    let home_kubeconfig = format!("{}{}",home.to_string(), "/.kube/config");
+    println!("{:?}",home_kubeconfig);
 
-    
+    let mut contents = fs::read_to_string(home_kubeconfig)
+        .expect("Something went wrong reading the file");
+
+    // println!("With text:\n{}", contents);
+
+    // let mut value: serde_yaml::Value = serde_yaml::from_str(contents.to_string()).unwrap();
+    // value["current-context"]["datadog"]["version"] = "1.38.8".into();
+    // serde_yaml::to_writer(std::io::stdout(), &value).unwrap();
 }

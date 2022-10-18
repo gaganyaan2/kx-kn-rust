@@ -9,3 +9,5 @@ edition = "2021"
 [dependencies]
 home = "0.5.3"
 yaml-rust = "0.4.5"
+serde = "1.0"
+serde_yaml = "0.9"
