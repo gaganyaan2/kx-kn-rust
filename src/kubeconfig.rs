@@ -1,8 +1,9 @@
 extern crate yaml_rust;
 use std::fs;
 use std::env;
-use serde::{Serialize, Deserialize};
-
+use serde_yaml;
+use yaml_rust::yaml::{Hash, Yaml};
+use yaml_rust::YamlLoader;
 
 pub fn kubeconfig_from_env(){
     let kubeconfig_env = env::var("KUBECONFIG").expect("$KUBECONFIG is not set");
@@ -18,7 +19,9 @@ pub fn kubeconfig_from_home_dir(){
     let mut contents = fs::read_to_string(home_kubeconfig)
         .expect("Something went wrong reading the file");
 
+    let docs = YamlLoader::load_from_str(&contents).unwrap();
     // println!("With text:\n{}", contents);
+    println!("{:?}",docs);
 
     // let mut value: serde_yaml::Value = serde_yaml::from_str(contents.to_string()).unwrap();
     // value["current-context"]["datadog"]["version"] = "1.38.8".into();
