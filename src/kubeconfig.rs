@@ -1,29 +1,34 @@
 extern crate yaml_rust;
-use std::fs;
 use std::env;
-use serde_yaml;
-use yaml_rust::yaml::{Hash, Yaml};
-use yaml_rust::YamlLoader;
+use std::path::Path;
+use std::process;
 
-pub fn kubeconfig_from_env(){
-    let kubeconfig_env = env::var("KUBECONFIG").expect("$KUBECONFIG is not set");
-    println!("KUBECONFIG={}",kubeconfig_env);
+fn print_type_of<T>(_: &T) {
+    println!("{}", std::any::type_name::<T>())
 }
 
-pub fn kubeconfig_from_home_dir(){
+pub fn get_kubeconfig_file() -> String {
+    let mut kubeconfig = "";
+    // check KUBECONFIG env
+    let kubeconfig_env = env::var("KUBECONFIG").ok().unwrap().to_string();
+    // check config file in home dir
+    let home = env::var("HOME").ok().unwrap().to_string();
+    let home_kubeconfig = format!("{}{}",home, "/.kube/config");
 
-    let home = env::var("HOME").expect("$HOME is not set");
-    let home_kubeconfig = format!("{}{}",home.to_string(), "/.kube/config");
-    println!("{:?}",home_kubeconfig);
+    // set default config
+    if kubeconfig_env.is_empty() {
+        kubeconfig = &home_kubeconfig;
+    } else {
+        kubeconfig = &kubeconfig_env;
+    }
 
-    let mut contents = fs::read_to_string(home_kubeconfig)
-        .expect("Something went wrong reading the file");
-
-    let docs = YamlLoader::load_from_str(&contents).unwrap();
-    // println!("With text:\n{}", contents);
-    println!("{:?}",docs);
-
-    // let mut value: serde_yaml::Value = serde_yaml::from_str(contents.to_string()).unwrap();
-    // value["current-context"]["datadog"]["version"] = "1.38.8".into();
-    // serde_yaml::to_writer(std::io::stdout(), &value).unwrap();
+    //check if config file exists
+    if Path::new(kubeconfig).exists() {
+        println!("kubeconfig file exists {}",kubeconfig);
+        return kubeconfig.to_string();
+    } else {
+        println!("{} : kubeconfig file does not exists ",kubeconfig);
+        process::exit(1);
+    }
+    
 }

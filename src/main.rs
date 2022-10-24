@@ -1,6 +1,6 @@
 mod kubeconfig;
-
+mod kx;
 fn main(){
-  kubeconfig::kubeconfig_from_env();
-  kubeconfig::kubeconfig_from_home_dir();
+  let conf = kubeconfig::get_kubeconfig_file();
+  kx::kx(&conf);
 }

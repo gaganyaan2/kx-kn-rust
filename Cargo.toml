@@ -11,3 +11,5 @@ home = "0.5.3"
 yaml-rust = "0.4.5"
 serde = "1.0"
 serde_yaml = "0.9"
+colored = "2.0.0"
+clap = { version = "4.0.18", features = ["derive"] }
