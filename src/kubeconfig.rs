@@ -24,7 +24,7 @@ pub fn get_kubeconfig_file() -> String {
 
     //check if config file exists
     if Path::new(kubeconfig).exists() {
-        println!("kubeconfig file exists {}",kubeconfig);
+        // println!("kubeconfig file exists {}",kubeconfig);
         return kubeconfig.to_string();
     } else {
         println!("{} : kubeconfig file does not exists ",kubeconfig);
