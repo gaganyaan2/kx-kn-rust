@@ -25,7 +25,7 @@ kx <context>       #switch to other context
 - WIP
 
 ### Refrences:
+- https://github.com/ahmetb/kubectx (Inspired By)
 - https://doc.rust-lang.org/rust-by-example/index.html
-- https://github.com/ahmetb/kubectx
 - https://docs.rs/kube/latest/kube/config/index.html
 - https://docs.rs/kube-conf/latest/kube_conf/
