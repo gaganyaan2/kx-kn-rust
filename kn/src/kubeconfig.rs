@@ -2,7 +2,6 @@ extern crate yaml_rust;
 use std::env;
 use std::path::Path;
 use std::process;
-use anyhow::{Context, Result};
 
 fn print_type_of<T>(_: &T) {
     println!("{}", std::any::type_name::<T>())
@@ -10,12 +9,16 @@ fn print_type_of<T>(_: &T) {
 
 pub fn get_kubeconfig_file() -> String {
     let mut kubeconfig = "";
+    let mut kubeconfig_env = "".to_string();
+    
     // check KUBECONFIG env
-    env::set_var("KUBECONFIG", "");
-    let kubeconfig_env = env::var("KUBECONFIG").ok().unwrap().to_string();
+    let kubeconfig_env_check = env::var("KUBECONFIG").ok();
+    if kubeconfig_env_check != None {
+        kubeconfig_env = env::var("KUBECONFIG").ok().unwrap().to_string();
+    }
     // check config file in home dir
-    let home = env::var("HOME").ok().unwrap().to_string();
-    let home_kubeconfig = format!("{}{}",home, "/.kube/config");
+    let homedir = env::home_dir().unwrap().as_path().display().to_string();
+    let home_kubeconfig = format!("{}{}",homedir, "/.kube/config");
 
     // set default config
     if kubeconfig_env.is_empty() {
