@@ -1,10 +1,13 @@
-# kx-kn in rust (WIP)
-Simple kubernetes context and namespace switch using rust
+# kx-kn in rust
+Simple kubernetes context and namespace switch in rust
 
-### Install kn and kx:
+- **kx** - Switch between kubernetes context
+- **kn** - Switch between kubernetes namespace
+
+### Install kx and kn in linux:
 
 ```bash
-WIP
+curl -s https://raw.githubusercontent.com/koolwithk/kx-kn-rust/main/install.sh | bash
 ```
 
 ### Run:
@@ -19,10 +22,6 @@ kx <context>       #switch to other context
 ### Why kx and kn in rust?
 - small binary size
 - fast
-
-### Limitation:
-
-- WIP
 
 ### Refrences:
 - https://github.com/ahmetb/kubectx (Inspired By)
