@@ -1,0 +1,96 @@
+name: kx-kn-release
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set env
+        run: echo "RELEASE_VERSION=v0.1.0" >> $GITHUB_ENV
+
+######## linux amd64
+      - name: kx-compile-linux
+        id: kx-compile-linux
+        uses: rust-build/rust-build.action@v1.3.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SRC_DIR: kx
+        with:
+          RUSTTARGET: x86_64-unknown-linux-musl
+          ARCHIVE_TYPES: tar.gz
+          ARCHIVE_NAME: kx-${{ env.RELEASE_VERSION }}-x86_64-linux-musl
+
+      # - name: kn-compile-linux
+      #   id: kn-compile-linux
+      #   uses: rust-build/rust-build.action@v1.3.2
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SRC_DIR: kn
+      #   with:
+      #     RUSTTARGET: x86_64-unknown-linux-musl
+      #     ARCHIVE_TYPES: tar.gz
+      #     ARCHIVE_NAME: kn-${{ env.RELEASE_VERSION }}-x86_64-linux-musl
+
+######## Windows amd64
+      - name: kx-compile-windows
+        id: kx-compile-windows
+        uses: rust-build/rust-build.action@v1.3.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SRC_DIR: kx
+        with:
+          RUSTTARGET: x86_64-pc-windows-gnu
+          ARCHIVE_TYPES: tar.gz
+          ARCHIVE_NAME: kx-${{ env.RELEASE_VERSION }}-x86_64-windows-gnu
+
+      # - name: kn-compile-windows
+      #   id: kn-compile-windows
+      #   uses: rust-build/rust-build.action@v1.3.2
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SRC_DIR: kn
+      #   with:
+      #     RUSTTARGET: x86_64-pc-windows-gnu
+      #     ARCHIVE_TYPES: tar.gz
+      #     ARCHIVE_NAME: kn-${{ env.RELEASE_VERSION }}-x86_64-windows-gnu
+
+######## darwin amd64
+      - name: kx-compile-darwin
+        id: kx-compile-darwin
+        uses: rust-build/rust-build.action@v1.3.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SRC_DIR: kx
+        with:
+          RUSTTARGET: x86_64-apple-darwin
+          ARCHIVE_TYPES: tar.gz
+          ARCHIVE_NAME: kx-${{ env.RELEASE_VERSION }}-x86_64-apple-darwin
+
+      # - name: kn-compile-darwin
+      #   id: kn-compile-darwin
+      #   uses: rust-build/rust-build.action@v1.3.2
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SRC_DIR: kn
+      #   with:
+      #     RUSTTARGET: x86_64-apple-darwin
+      #     ARCHIVE_TYPES: tar.gz
+      #     ARCHIVE_NAME: kn-${{ env.RELEASE_VERSION }}-x86_64-apple-darwin
+      - name: Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ env.RELEASE_VERSION }}
+          prerelease: false
+          title: "${{ env.RELEASE_VERSION }}"
+          files: |
+            # ${{ steps.kn-compile-linux.outputs.BUILT_ARCHIVE }}
+            ${{ steps.kx-compile-linux.outputs.BUILT_ARCHIVE }}
+            # ${{ steps.kn-compile-windows.outputs.BUILT_ARCHIVE }}
+            ${{ steps.kx-compile-windows.outputs.BUILT_ARCHIVE }}
+            # ${{ steps.kn-compile-darwin.outputs.BUILT_ARCHIVE }}
+            ${{ steps.kx-compile-darwin.outputs.BUILT_ARCHIVE }}
