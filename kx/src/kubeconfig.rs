@@ -3,10 +3,6 @@ use std::env;
 use std::path::Path;
 use std::process;
 
-fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
-}
-
 pub fn get_kubeconfig_file() -> String {
     let mut kubeconfig = "";
     let mut kubeconfig_env = "".to_string();

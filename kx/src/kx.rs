@@ -1,34 +1,11 @@
 extern crate yaml_rust;
 use std::fs;
-use std::env;
 use yaml_rust::YamlLoader;
 use colored::Colorize;
 use std::io::Write;
 use std::process;
-// use clap::Parser;
 
-// #[derive(Parser, Debug)]
-// #[command(author, version, about, long_about = None)]
-
-// struct Args {
-//     context: String,
-// }
-
-// fn print_type_of<T>(_: &T) {
-//     println!("{}", std::any::type_name::<T>())
-// }
-
-pub fn kx(kubeconfig: &str) {
-    // args
-    // let args = Args::parse();
-    // println!("args = {:?}",args);
-    let args: Vec<String> = env::args().collect();
-    let mut kx = "";
-    if args.len() == 1 {
-        kx = "all"
-    } else {
-        kx = args[1].as_str();
-    }
+pub fn kx(kubeconfig: &str, kcontext: &str) {
 
     let read_kubeconfig = fs::read_to_string(kubeconfig)
     .expect("Something went wrong reading the file");
@@ -37,7 +14,7 @@ pub fn kx(kubeconfig: &str) {
     let context = &contexts[0];
     let current_context = context["current-context"].as_str().unwrap();
     let all_contexts = &context["contexts"];
-    if kx == "all" {
+    if kcontext == "" {
         // get current context
         for context_name in all_contexts.as_vec().unwrap() {
             if context_name["name"].as_str().unwrap() == current_context {
@@ -51,7 +28,7 @@ pub fn kx(kubeconfig: &str) {
     } else {
         let mut check_context_exists = false;
         for context_name in all_contexts.as_vec().unwrap() {
-            if context_name["name"].as_str().unwrap() == kx {
+            if context_name["name"].as_str().unwrap() == kcontext {
                 check_context_exists = true;
             }
         }
@@ -61,13 +38,13 @@ pub fn kx(kubeconfig: &str) {
             .expect("Something went wrong reading the file");
 
             let mut value: serde_yaml::Value = serde_yaml::from_str(&contents).unwrap();
-            *value.get_mut("current-context").unwrap() = kx.into();
+            *value.get_mut("current-context").unwrap() = kcontext.into();
             let writer = serde_yaml::to_string(&value).unwrap();
             let mut file = std::fs::File::create(kubeconfig).expect("create failed");
             file.write_all(writer.as_bytes()).expect("write failed");
-            println!("Switched context to \"{}\"",kx.green());
+            println!("Switched context to \"{}\"",kcontext.green());
         } else {
-            println!("error: no context exists with the name: \"{}\"",kx.red());
+            println!("error: no context exists with the name: \"{}\"",kcontext.red());
             process::exit(1);
         }
 

@@ -1,12 +1,13 @@
 use std::env;
 use std::process;
 
-pub fn flags() {
+pub fn flags() -> String {
     let args: Vec<String> = env::args().collect();
     let mut kx = "";
 
     if args.len() == 1 {
-        kx = "all"
+        kx = "";
+        return kx.to_string();
     } else {
         kx = args[1].as_str();
     }
@@ -28,8 +29,9 @@ pub fn flags() {
         process::exit(0);
     }
 
-    if kx.starts_with("-") {
+    if kx.starts_with("--") {
         println!("invalid option try with --help");
         process::exit(1);
     }
+    return kx.to_string();
 }
