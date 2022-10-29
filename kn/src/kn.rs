@@ -59,19 +59,27 @@ pub async fn kn(kubeconfig: &str, k_namespace: &str) {
             let contents = fs::read_to_string(kubeconfig)
             .expect("Something went wrong reading the file");
 
-            // let mut value: serde_yaml::Value = serde_yaml::from_str(&contents).unwrap();
-            let mut value: serde_yaml::Mapping = serde_yaml::from_str(&contents).unwrap();
-            let data: serde_yaml::Value = serde_yaml::from_str(&contents).unwrap();
-            let cluster = data["contexts"][index_count]["context"]["cluster"].as_str().unwrap();
-            let user = data["contexts"][index_count]["context"]["user"].as_str().unwrap();
+            let mut value: serde_yaml::Value = serde_yaml::from_str(&contents).unwrap();
+            let target = value
+            .get_mut("contexts")
+            .unwrap()
+            .get_mut(index_count)
+            .unwrap()
+            .get_mut("context")
+            .unwrap()
+            .as_mapping_mut()
+            .unwrap();
 
-            let mut map = Mapping::new();
-            map.insert("cluster".into(), cluster.into());
-            map.insert("namespace".into(), k_namespace.into());
-            map.insert("user".into(), user.into());
-
-            // *value.get_mut("contexts").unwrap().get_mut(index_count).unwrap().get_mut("context").unwrap().get_mut("namespace").unwrap() = kn.into();
-            *value.get_mut("contexts").unwrap().get_mut(index_count).unwrap().get_mut("context").unwrap().as_mapping_mut().unwrap() = map.into();
+            if target.contains_key("namespace") {
+                *value
+                .get_mut("contexts").unwrap()
+                .get_mut(index_count).unwrap()
+                .get_mut("context").unwrap()
+                .get_mut("namespace").unwrap() = k_namespace.into();
+            } else {
+                target.insert("namespace".into(), k_namespace.into());
+            }
+        
             let writer = serde_yaml::to_string(&value).unwrap();
             let mut file = std::fs::File::create(kubeconfig).expect("create failed");
             file.write_all(writer.as_bytes()).expect("write failed");
