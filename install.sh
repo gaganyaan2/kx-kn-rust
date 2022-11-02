@@ -56,11 +56,11 @@ elif [ "$(uname)" = "Linux" ] && [ "arm64" = "$arch" ] ; then
     install_kxkn "$tag_name" "$os" "$arch" "kx"
     install_kxkn "$tag_name" "$os" "$arch" "kn"
     installed_msg
-elif [ "$(uname)" = "Darwin" ] && [ "arm64" = "$arch" ] ; then
-    os="darwin"
-    install_kxkn "$tag_name" "$os" "$arch" "kx"
-    install_kxkn "$tag_name" "$os" "$arch" "kn"
-    installed_msg
+# elif [ "$(uname)" = "Darwin" ] && [ "arm64" = "$arch" ] ; then
+#     os="darwin"
+#     install_kxkn "$tag_name" "$os" "$arch" "kx"
+#     install_kxkn "$tag_name" "$os" "$arch" "kn"
+#     installed_msg
 else
     echo "$(uname -m) $(uname) OS not supported by this script :( Please install from release page."
 fi
