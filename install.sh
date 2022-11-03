@@ -56,11 +56,13 @@ elif [ "$(uname)" = "Linux" ] && [ "arm64" = "$arch" ] ; then
     install_kxkn "$tag_name" "$os" "$arch" "kx"
     install_kxkn "$tag_name" "$os" "$arch" "kn"
     installed_msg
-# elif [ "$(uname)" = "Darwin" ] && [ "arm64" = "$arch" ] ; then
-#     os="darwin"
-#     install_kxkn "$tag_name" "$os" "$arch" "kx"
-#     install_kxkn "$tag_name" "$os" "$arch" "kn"
-#     installed_msg
+elif [ "$(uname)" = "Darwin" ] && [ "arm64" = "$arch" ] ; then
+    os="darwin"
+    install_kxkn "$tag_name" "$os" "$arch" "kx"
+    install_kxkn "$tag_name" "$os" "$arch" "kn"
+    installed_msg
+    echo 'for Apple Mac follow https://github.com/koolwithk/kx-kn-rust/issues/6 OR Build your own binary!!!'
+    echo ''
 else
     echo "$(uname -m) $(uname) OS not supported by this script :( Please install from release page."
 fi
