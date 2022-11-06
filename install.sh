@@ -28,6 +28,7 @@ install_kxkn() {
     KXKN=$4
     #kn-v0.1.0-linux-arm64.tar.gz
     cd /tmp
+    echo "Downloading ${KXKN}..."
     curl -s https://github.com/koolwithk/kx-kn-rust/releases/download/${TAG_NAME}/${KXKN}-${TAG_NAME}-${OS}-${ARCH}.tar.gz -L --output ${KXKN}-${TAG_NAME}-${OS}-${ARCH}.tar.gz
     tar -xzf ${KXKN}-${TAG_NAME}-${OS}-${ARCH}.tar.gz
     rm -rf ${KXKN}-${TAG_NAME}-${OS}-${ARCH}.tar.gz
@@ -40,6 +41,8 @@ if [ "$(uname -m | grep -o aarch64)" = "aarch64" ] || [ "$(uname -m | grep -o ar
     arch=arm64
 elif [ "$(uname -m | grep -o x86_64)" = "x86_64" ] || [ "$(uname -m | grep -o amd64)" = "amd64" ] ; then
     arch=x86_64
+elif [ "$(uname -m | grep -o riscv64)" = "riscv64" ] || [ "$(uname -m | grep -o riscv64)" = "riscv64" ] ; then
+    arch=riscv64
 else
     echo "$(uname -m) $(uname) OS not supported by this script :("
 fi
@@ -63,6 +66,11 @@ elif [ "$(uname)" = "Darwin" ] && [ "arm64" = "$arch" ] ; then
     installed_msg
     echo 'for Apple Mac follow https://github.com/koolwithk/kx-kn-rust/issues/6 OR Build your own binary!!!'
     echo ''
+elif [ "$(uname)" = "Linux" ] && [ "riscv64" = "$arch" ] ; then
+    os="linux"
+    install_kxkn "$tag_name" "$os" "$arch" "kx"
+    install_kxkn "$tag_name" "$os" "$arch" "kn"
+    installed_msg
 else
     echo "$(uname -m) $(uname) OS not supported by this script :( Please install from release page."
 fi
