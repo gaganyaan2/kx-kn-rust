@@ -12,7 +12,7 @@ use std::process;
 pub async fn kn(kubeconfig: &str, k_namespace: &str) {
 
     let read_kubeconfig = fs::read_to_string(kubeconfig)
-    .expect("Something went wrong reading the file");
+    .expect("Something went wrong reading KUBECONFIG file");
 
     let contexts = YamlLoader::load_from_str(&read_kubeconfig).unwrap();
     let context = &contexts[0];
@@ -56,7 +56,7 @@ pub async fn kn(kubeconfig: &str, k_namespace: &str) {
         }
         if check_namespace_exists == true {
             let contents = fs::read_to_string(kubeconfig)
-            .expect("Something went wrong reading the file");
+            .expect("Something went wrong reading KUBECONFIG file");
 
             let mut value: serde_yaml::Value = serde_yaml::from_str(&contents).unwrap();
             let target = value

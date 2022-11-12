@@ -42,7 +42,7 @@ pub fn kx(kubeconfig: &str, kcontext: &str) {
 
         if check_context_exists == true {
             let contents = fs::read_to_string(kubeconfig)
-            .expect("Something went wrong reading the file");
+            .expect("Something went wrong reading KUBECONFIG file");
 
             let mut value: serde_yaml::Value = serde_yaml::from_str(&contents).unwrap();
             *value.get_mut("current-context").unwrap() = kcontext.into();
