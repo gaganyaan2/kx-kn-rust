@@ -7,7 +7,6 @@ use yaml_rust::YamlLoader;
 use colored::Colorize;
 use std::io::Write;
 use std::process;
-use serde_yaml::{Mapping, Value};
 
 #[tokio::main]
 pub async fn kn(kubeconfig: &str, k_namespace: &str) {
@@ -30,7 +29,7 @@ pub async fn kn(kubeconfig: &str, k_namespace: &str) {
         if namespace_name["name"].as_str().unwrap() == current_context {
             index_count = count;
             if context["contexts"][index_count]["context"]["namespace"].as_str().is_none() {
-                current_namespace = "default"
+                current_namespace = ""
             } else {
                 current_namespace = context["contexts"][index_count]["context"]["namespace"].as_str().unwrap();
             }
