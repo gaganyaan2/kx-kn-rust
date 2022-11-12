@@ -17,3 +17,6 @@ anyhow = "1.0"
 [[bin]]
 name = "kx"
 path = "src/main.rs"
+
+[profile.release]
+strip = true
