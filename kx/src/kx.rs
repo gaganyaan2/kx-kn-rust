@@ -45,7 +45,17 @@ pub fn kx(kubeconfig: &str, kcontext: &str) {
             .expect("Something went wrong reading KUBECONFIG file");
 
             let mut value: serde_yaml::Value = serde_yaml::from_str(&contents).unwrap();
-            *value.get_mut("current-context").unwrap() = kcontext.into();
+            let target = value
+            .as_mapping_mut()
+            .unwrap();
+
+            if target.contains_key("current-context") {
+                *value
+                .get_mut("current-context").unwrap() = kcontext.into();
+            } else {
+                target.insert("current-context".into(), kcontext.into());
+            }
+            
             let writer = serde_yaml::to_string(&value).unwrap();
             let mut file = std::fs::File::create(kubeconfig).expect("create failed");
             file.write_all(writer.as_bytes()).expect("write failed");
